@@ -11,7 +11,6 @@ typedef struct USERDATA
 
 USERDATA* g_pHeadNode = NULL;
 
-// head에 넣기
 void AddNewNode(int age, const char *pszName, const char *pszPhone) {
 	USERDATA* pNewNode = (USERDATA*)malloc(sizeof(USERDATA));
 	memset(pNewNode, 0, sizeof(USERDATA));
@@ -24,8 +23,16 @@ void AddNewNode(int age, const char *pszName, const char *pszPhone) {
 	if (g_pHeadNode == NULL) {
 		g_pHeadNode = pNewNode;
 	} else {
-		pNewNode->pNext = g_pHeadNode;
-		g_pHeadNode = pNewNode;
+		// head에 넣기 (stack 구조)
+		//pNewNode->pNext = g_pHeadNode;
+		//g_pHeadNode = pNewNode;
+		
+		// tail에 넣기 (queue 구조)
+		USERDATA* pTail = g_pHeadNode;
+		while (pTail -> pNext != NULL) {
+			pTail = pTail->pNext;
+		}
+		pTail->pNext = pNewNode;
 	}
 }
 
@@ -43,7 +50,6 @@ void ReleaseList(void) {
 
 		free(pDelete);
 	}
-
 
 	g_pHeadNode = NULL;
 }
