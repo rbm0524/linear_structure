@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 typedef struct USERDATA
 {
@@ -54,10 +55,25 @@ void ReleaseList(void) {
 	g_pHeadNode = NULL;
 }
 
+USERDATA* SearchByName(const char* pszName) {
+	USERDATA* pTmp = g_pHeadNode;
+	while (pTmp != NULL) {
+		if (strcmp(pTmp -> name, pszName) == 0) {
+			printf("\"%s\" : Found\n", pszName);
+			return pTmp;
+		}
+		pTmp = pTmp->pNext;
+	}
+
+	printf("\"%s\" : is not found\n", pszName);
+	return NULL;
+}
+
 void InitDummyData(void) {
 	//Input
 	AddNewNode(10, "Hoon", "010-1111-1111");
 	AddNewNode(11, "Goon", "010-1234-5678");
+	AddNewNode(12, "Poon", "010-9999-9999");
 }
 
 void PrintList(void) {
@@ -72,6 +88,12 @@ int main() {
 	InitDummyData();
 
 	PrintList();
+
+	SearchByName("Hoon");
+	SearchByName("Goon");
+	SearchByName("Poon");
+	SearchByName("Jang");
+	SearchByName("Kim");
 
 	ReleaseList();
 

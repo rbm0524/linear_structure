@@ -3,5 +3,5 @@
     <Platform Name="x64" />
     <Platform Name="x86" />
   </Configurations>
-  <Project Path="linear_structure/linear_structure.vcxproj" />
+  <Project Path="linear_structure/linear_structure.vcxproj" Id="a99bdfbe-026f-4851-9bcc-572369fad55e" />
 </Solution>
