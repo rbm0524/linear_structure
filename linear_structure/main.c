@@ -82,6 +82,95 @@ void PrintList(void) {
 		printf("[%p] age : %d\tname : %s\tphone : %s\t[%p]\n", pTmp, pTmp -> age, pTmp -> name, pTmp -> phone, pTmp -> pNext);
 		pTmp = pTmp->pNext;
 	}
+	putchar('\n');
+}
+
+// 지울 노드 찾기
+USERDATA* SearchToRemove(USERDATA** ppPrev, const char *pszName) {
+	USERDATA* pCurrent = g_pHeadNode;
+	USERDATA* pPrev = NULL; // pTmp가 HEAD일 때(초기값) pPrev는 NULL이어야 한다.
+	while (pCurrent != NULL) {
+		if (strcmp(pCurrent->name, pszName) == 0) {
+
+			*ppPrev = pPrev;
+			return pCurrent; // 찾은 노드의 주소 반환
+		}
+		pPrev = pCurrent;
+		pCurrent = pCurrent->pNext;
+	}
+
+	return NULL;
+}
+
+// 노드 지우기
+void RemoveNode(USERDATA* pPrev) { // 지울 노드의 앞 노드만 알아도 pNext로 지울 노드를 알 수 있다.
+	
+	USERDATA* pRemove = NULL;
+	if (pPrev == NULL) {
+		if (g_pHeadNode == NULL) {
+			return;
+		}
+		else {
+			pRemove = g_pHeadNode;
+			g_pHeadNode = g_pHeadNode->pNext;
+			printf("RemoveNode(): %s\n", pRemove -> name);
+			free(pRemove);
+		}
+		return;
+	}
+	// HEAD 노드가 아니다.
+	pRemove = pPrev->pNext;
+	pPrev->pNext = pRemove->pNext;
+	printf("RemoveNode(): %s\n", pRemove->name);
+	free(pRemove);
+}
+
+void RemoveTest01() {
+
+	AddNewNode(10, "Hoon", "010-1111-1111");
+	printf("\n------------------노드 하나 삭제 검증---------------------\n");
+	PrintList();
+	USERDATA* pPrev = NULL; // 이전 노드 저장
+	if(SearchToRemove(&pPrev, "Hoon")) RemoveNode(pPrev); // 지울 노드와 지울 노드의 앞 노드 검사
+	PrintList();
+	ReleaseList();
+}
+
+void RemoveTest02() {
+
+	USERDATA* pPrev = NULL;
+	printf("\n---------------------3개의 노드 중 첫 번째 노드 삭제 검증---------------------\n");
+	InitDummyData();
+	PrintList();
+	if (SearchToRemove(&pPrev, "Hoon")) RemoveNode(pPrev);
+	PrintList();
+	AddNewNode(10, "Hoon", "010-1111-1111");
+	ReleaseList();
+}
+
+void RemoveTest03() {
+
+	USERDATA* pPrev = NULL;
+
+	printf("\n---------------------3개의 노드 중 두 번째 노드 삭제 검증---------------------\n");
+	InitDummyData();
+	PrintList();
+	if (SearchToRemove(&pPrev, "Goon")) RemoveNode(pPrev);
+	PrintList();
+	AddNewNode(12, "Goon", "010-1234-5678");
+	ReleaseList();
+}
+
+void RemoveTest04() {
+
+	USERDATA* pPrev = NULL;
+	printf("\n---------------------3개의 노드 중 세 번째 노드 삭제 검증---------------------\n");
+	InitDummyData();
+	PrintList();
+	if (SearchToRemove(&pPrev, "Poon")) RemoveNode(pPrev);
+	PrintList();
+	AddNewNode(12, "Poon", "010-9999-9999");
+	ReleaseList();
 }
 
 int main() {
@@ -94,8 +183,13 @@ int main() {
 	SearchByName("Poon");
 	SearchByName("Jang");
 	SearchByName("Kim");
-
 	ReleaseList();
+
+	printf("\n노드 삭제 검증 시작\n");
+	RemoveTest01();
+	RemoveTest02();
+	RemoveTest03();
+	RemoveTest04();
 
 	return 0;
 
